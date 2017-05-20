@@ -210,7 +210,7 @@ exports.randomplay = function (req, res, next) {
             offset: intAleatorio
         });
 
-        req.session.usadas.push(extraido[0]); //añadimos al array de usadas
+        req.session.usadas.push(extraido); //añadimos al array de usadas
         return req.session.usadas[req.session.usadas.length - 1]; //Pasamos la última pregunta añadida
     })
     .then(function (quiz) { //recibe el quiz de la base de datos
