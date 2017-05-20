@@ -201,14 +201,14 @@ exports.randomplay = function (req, res, next) {
             req.session.usadas = [];
         }
 
-        var arrayUsadas = req.session.usadas.length ? req.session.usadas : (-1);
-        var whereOptions = {'id' : {$notIn: arrayUsadas}};
+        req.session.usadas = req.session.usadas.length ? req.session.usadas : (-1);
+        var whereOptions = {'id' : {$notIn: req.session.usadas}};
         
         req.session.usadas.push(models.Quiz.findAll({
             where: whereOptions,
             limit: 1,
             offset: intAleatorio
-        })[0]); //añadimos al array de usadas
+        })); //añadimos al array de usadas
         return req.session.usadas[req.session.usadas.length - 1]; //Pasamos la última pregunta añadida
     })
     .then(function (quiz) { //recibe el quiz de la base de datos
