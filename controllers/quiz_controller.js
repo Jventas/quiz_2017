@@ -194,27 +194,30 @@ exports.randomplay = function (req, res, next) {
     .then(function (count) {
 
 
-        var intAleatorio = Math.floor(Math.random()*(count-1))+1;
-        //var intAleatorio = 1;
+        var intAleatorio = Math.floor(Math.random()*(count-2))+1;
 
         //Opción para no incluir preguntas usadas
-        if(!req.session.usadas){
-            req.session.usadas = [];
+        if(!req.session.restantes){
+            req.session.restantes = [];
+            for(int i=0;i<count;i++){
+                req.session.restantes.push(i); //Guardamos todos los ID
+            }
         }
-
-        var arrayUsadas = req.session.usadas.length === 0 ? [-1] : req.session.usadas;
-        var whereOptions = {'id' : {notIn: arrayUsadas}};
+        var arrayRestantes = req.session.restantes.length == 0 ? [-1] : req.session.restantes;
+        var whereOptions = {'id' : arrayRestantes};
         
         var extraido = models.Quiz.findAll({
             where: whereOptions,
             limit: 1,
             offset: intAleatorio
         });
-
-        req.session.usadas.push(extraido[0]); //añadimos al array de usadas
-        return req.session.usadas[req.session.usadas.length - 1]; //Pasamos la última pregunta añadida
+        if(req.session.restantes.length > 0){
+            req.session.usadas.slice(extraido[0]); //añadimos al array de usadas
+        }
+        
+        return extraido; //Pasamos lo encontrado
     })
-    .then(function (quiz) { //recibe el quiz de la base de datos
+    .then(function (quizzes) { //recibe el quiz de la base de datos
         var aciertos = 0;
         if(req.session.aciertos){
             aciertos = req.session.aciertos;
@@ -223,13 +226,13 @@ exports.randomplay = function (req, res, next) {
         }
         var totales = models.Quiz.count();
 
-        if(req.session.usadas.length === totales){
+        if(req.session.restantes.length === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
         } else {
             res.render('quizzes/random_play.ejs', {
-            quiz: quiz,
+            quiz: quizzes[0],
             score: aciertos
         });
         }
@@ -253,7 +256,7 @@ exports.randomcheck = function (req, res, next) {
     .then(function (count) {
 
 
-        if(req.session.usadas.length === count){
+        if(req.session.restantes.length === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
