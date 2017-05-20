@@ -195,6 +195,9 @@ exports.randomplay = function (req, res, next) {
 
 
         var intAleatorio = Math.floor(Math.random()*(count-2))+1;
+        if(!req.session.preguntasQuedan){
+            req.session.preguntasQuedan = count;
+        }
 
         //Opción para no incluir preguntas usadas
         if(!req.session.restantes){
@@ -225,7 +228,7 @@ exports.randomplay = function (req, res, next) {
             req.session.aciertos = 0; //La inicializo si no existe
         }
 
-        if(req.session.restantes.length === 0){
+        if(req.session.preguntasQuedan === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
@@ -244,22 +247,23 @@ exports.randomplay = function (req, res, next) {
 
 // GET /quizzes/randomcheck/:quizId
 exports.randomcheck = function (req, res, next) {
-    var answer = req.query.answer || "";
-
-    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
-    if(result){
-        req.session.aciertos++; //Aumentamos los aciertos si ha acertado
-    }
 
     models.Quiz.count()
     .then(function (count) {
 
+        var answer = req.query.answer || "";
 
-        if(req.session.restantes.length === 0){
+        var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+        if(result){
+            req.session.aciertos++; //Aumentamos los aciertos si ha acertado
+        }
+
+        if(req.session.preguntasQuedan === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
         } else {
+            req.session.preguntasQuedan--;
             res.render('quizzes/random_result', {
                 score: req.session.aciertos,
                 result: result,
