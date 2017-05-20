@@ -203,7 +203,7 @@ exports.randomplay = function (req, res, next) {
                 req.session.restantes.push(i+1); //Guardamos todos los ID
             }
         }
-        var arrayRestantes = req.session.restantes.length == 0 ? [-1] : req.session.restantes;
+        var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
         var whereOptions = {'id' : arrayRestantes};
         
         var extraido = models.Quiz.findAll({
@@ -212,7 +212,7 @@ exports.randomplay = function (req, res, next) {
             offset: intAleatorio
         });
         if(req.session.restantes.length > 0){
-            req.session.restantes.splice(extraido[0]); //añadimos al array de usadas
+            req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
         }
         
         return extraido; //Pasamos lo encontrado
