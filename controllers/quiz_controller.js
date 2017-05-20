@@ -207,7 +207,7 @@ exports.randomplay = function (req, res, next) {
             req.session.usadas = [];
         }
         var arrayUsadas = req.session.usadas.length ? req.session.usadas : (-1);
-        var whereOptions = {'id' : {$notIn: used}};
+        var whereOptions = {'id' : {$notIn: arrayUsadas}};
         findOptions.where = whereOptions;
         req.session.usadas.push(models.Quiz.findAll(findOptions)); //añadimos al array de usadas
         return req.session.usadas(req.session.usadas.length - 1); //Pasamos la última pregunta añadida
