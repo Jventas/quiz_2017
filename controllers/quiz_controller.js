@@ -226,7 +226,7 @@ exports.randomplay = function (req, res, next) {
              });
         } else {
             res.render('quizzes/random_play.ejs', {
-            quiz: quiz[0],
+            quiz: quiz,
             score: aciertos
         });
         }
