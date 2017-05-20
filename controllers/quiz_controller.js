@@ -194,7 +194,7 @@ exports.randomplay = function (req, res, next) {
     .then(function (count) {
 
 
-        var intAleatorio = Math.floor(Math.random()*(count-2))+1;
+        var intAleatorio = Math.floor(Math.random()*(count-1))+1;
         if(!req.session.preguntasQuedan){
             req.session.preguntasQuedan = count;
         }
