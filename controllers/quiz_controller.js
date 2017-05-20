@@ -224,7 +224,6 @@ exports.randomplay = function (req, res, next) {
         } else {
             req.session.aciertos = 0; //La inicializo si no existe
         }
-        var totales = models.Quiz.count();
 
         if(req.session.restantes.length === 0){
             res.render('quizzes/random_nomore', {
