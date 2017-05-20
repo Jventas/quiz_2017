@@ -212,7 +212,7 @@ exports.randomplay = function (req, res, next) {
             offset: intAleatorio
         });
         if(req.session.restantes.length > 0){
-            req.session.usadas.slice(extraido[0]); //añadimos al array de usadas
+            req.session.usadas.splice(extraido[0]); //añadimos al array de usadas
         }
         
         return extraido; //Pasamos lo encontrado
