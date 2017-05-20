@@ -196,20 +196,19 @@ exports.randomplay = function (req, res, next) {
 
         var intAleatorio = Math.floor(Math.random()*(count-1))+1;
 
-        var findOptions = {};
-
-        findOptions.offset = intAleatorio; //Fila aleatoria
-        findOptions.limit = 1; //Busca solo una pregunta por transacción
-
-
         //Opción para no incluir preguntas usadas
         if(!req.session.usadas){
             req.session.usadas = [];
         }
+
         var arrayUsadas = req.session.usadas.length ? req.session.usadas : (-1);
         var whereOptions = {'id' : {$notIn: arrayUsadas}};
-        findOptions.where = whereOptions;
-        req.session.usadas.push(models.Quiz.findAll(findOptions)); //añadimos al array de usadas
+        
+        req.session.usadas.push(models.Quiz.findAll({
+            where: whereOptions,
+            limit: 1,
+            offset: intAleatorio
+        })); //añadimos al array de usadas
         return req.session.usadas[req.session.usadas.length - 1]; //Pasamos la última pregunta añadida
     })
     .then(function (quiz) { //recibe el quiz de la base de datos
@@ -219,11 +218,19 @@ exports.randomplay = function (req, res, next) {
         } else {
             req.session.aciertos = 0; //La inicializo si no existe
         }
+        var totales = models.Quiz.count();
 
-        res.render('quizzes/random_play.ejs', {
+        if(req.session.usadas.length === totales){
+            res.render('quizzes/random_nomore', {
+                score: req.session.aciertos
+             });
+        } else {
+            res.render('quizzes/random_play.ejs', {
             quiz: quiz,
             score: aciertos
         });
+        }
+        
     })
     .catch(function (error) {
         next(error);
@@ -243,7 +250,7 @@ exports.randomcheck = function (req, res, next) {
     .then(function (count) {
 
 
-        if(req.session.usadas.length == count){
+        if(req.session.usadas.length === count){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
