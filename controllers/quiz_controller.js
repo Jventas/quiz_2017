@@ -214,6 +214,10 @@ exports.randomplay = function (req, res, next) {
             limit: 1,
             offset: intAleatorio
         });
+
+        if(!extraido){
+            extraido = [];
+        }
         if(req.session.restantes.length > 0){
             req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
         }
@@ -228,7 +232,7 @@ exports.randomplay = function (req, res, next) {
             req.session.aciertos = 0; //La inicializo si no existe
         }
 
-        if(req.session.preguntasQuedan === 0){
+        if(req.session.preguntasQuedan === 0 || quizzes.length === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
