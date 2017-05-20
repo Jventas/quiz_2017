@@ -194,8 +194,8 @@ exports.randomplay = function (req, res, next) {
     .then(function (count) {
 
 
-        //var intAleatorio = Math.floor(Math.random()*(count-1))+1;
-        var intAleatorio = 1;
+        var intAleatorio = Math.floor(Math.random()*(count-1))+1;
+        //var intAleatorio = 1;
 
         //Opción para no incluir preguntas usadas
         if(!req.session.usadas){
@@ -203,7 +203,7 @@ exports.randomplay = function (req, res, next) {
         }
 
         var arrayUsadas = req.session.usadas.length === 0 ? [-1] : req.session.usadas;
-        var whereOptions = {'id' : {$notIn: arrayUsadas}};
+        var whereOptions = {'id' : {notIn: arrayUsadas}};
         
         var extraido = models.Quiz.findAll({
             where: whereOptions,
