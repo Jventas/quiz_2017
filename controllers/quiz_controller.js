@@ -232,6 +232,9 @@ exports.randomplay = function (req, res, next) {
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
+            req.session.aciertos = undefined;
+            req.session.restantes = undefined;
+            req.session.preguntasQuedan = undefined;
         } else {
             res.render('quizzes/random_play.ejs', {
             quiz: quizzes[0],
@@ -262,6 +265,9 @@ exports.randomcheck = function (req, res, next) {
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
+            req.session.aciertos = undefined;
+            req.session.restantes = undefined;
+            req.session.preguntasQuedan = undefined;
         } else {
             req.session.preguntasQuedan--;
             res.render('quizzes/random_result', {
