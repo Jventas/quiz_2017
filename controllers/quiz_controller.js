@@ -201,7 +201,11 @@ exports.randomplay = function (req, res, next) {
         findOptions.offset = intAleatorio; //Fila aleatoria
         findOptions.limit = 1; //Busca solo una pregunta por transacción
 
+
         //Opción para no incluir preguntas usadas
+        if(!req.session.usadas){
+            req.session.usadas = [];
+        }
         var arrayUsadas = req.session.usadas.length ? req.session.usadas : (-1);
         var whereOptions = {'id' : {$notIn: used}};
         findOptions.where = whereOptions;
