@@ -187,3 +187,72 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+// GET /quizzes/randomplay
+exports.randomplay = function (req, res, next) {
+    models.Quiz.count()
+    .then(function (count) {
+
+
+        var intAleatorio = Math.floor(Math.random()*(count-1))+1;
+
+        var findOptions = {};
+
+        findOptions.offset = intAleatorio; //Fila aleatoria
+        findOptions.limit = 1; //Busca solo una pregunta por transacción
+
+        //Opción para no incluir preguntas usadas
+        var arrayUsadas = req.session.usadas.length ? req.session.usadas : (-1);
+        var whereOptions = {'id' : {$notIn: used}};
+        findOptions.where = whereOptions;
+        req.session.usadas.push(models.Quiz.findAll(findOptions)); //añadimos al array de usadas
+        return req.session.usadas(req.session.usadas.length - 1); //Pasamos la última pregunta añadida
+    })
+    .then(function (quiz) { //recibe el quiz de la base de datos
+        var aciertos = 0;
+        if(req.session.aciertos){
+            aciertos = req.session.aciertos;
+        } else {
+            req.session.aciertos = 0; //La inicializo si no existe
+        }
+
+        res.render('quizzes/random_play.ejs', {
+            quiz: quiz,
+            score: aciertos
+        });
+    })
+    .catch(function (error) {
+        next(error);
+    });
+};
+
+// GET /quizzes/randomcheck/:quizId
+exports.randomcheck = function (req, res, next) {
+    var answer = req.query.answer || "";
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+    if(result){
+        req.session.aciertos++; //Aumentamos los aciertos si ha acertado
+    }
+
+    models.Quiz.count()
+    .then(function (count) {
+
+
+        if(req.session.usadas.length == count){
+            res.render('quizzes/random_nomore', {
+                score: req.session.aciertos
+             });
+        } else {
+            res.render('quizzes/random_result', {
+                score: req.session.aciertos,
+                result: result,
+                answer: answer
+             });
+        }
+    })
+
+    
+};
+    
+};
