@@ -199,7 +199,7 @@ exports.randomplay = function (req, res, next) {
         //Opción para no incluir preguntas usadas
         if(!req.session.restantes){
             req.session.restantes = [];
-            for(int i=0;i<count;i++){
+            for(var i=0;i<count;i++){
                 req.session.restantes.push(i); //Guardamos todos los ID
             }
         }
