@@ -200,7 +200,7 @@ exports.randomplay = function (req, res, next) {
         if(!req.session.restantes){
             req.session.restantes = [];
             for(var i=0;i<count;i++){
-                req.session.restantes.push(i); //Guardamos todos los ID
+                req.session.restantes.push(i+1); //Guardamos todos los ID
             }
         }
         var arrayRestantes = req.session.restantes.length == 0 ? [-1] : req.session.restantes;
@@ -212,7 +212,7 @@ exports.randomplay = function (req, res, next) {
             offset: intAleatorio
         });
         if(req.session.restantes.length > 0){
-            req.session.usadas.splice(extraido[0]); //añadimos al array de usadas
+            req.session.restantes.splice(extraido[0]); //añadimos al array de usadas
         }
         
         return extraido; //Pasamos lo encontrado
