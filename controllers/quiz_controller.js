@@ -197,13 +197,18 @@ exports.randomplay = function (req, res, next) {
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
+            var randonIndex = 0;
             for(var i=0;i<count;i++){
                 req.session.restantes.push(i+1); //Guardamos todos los ID - [1-count]
             }
         }
 
+        if(randomIndex >3){
+            randomIndex = 0;
+        } else{
+            randomIndex++;
+        }
         
-        var randomIndex = Math.floor(Math.random()*(req.session.restantes.length-1));
         idRandom = req.session.restantes[randomIndex];
 
 
