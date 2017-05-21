@@ -234,7 +234,7 @@ exports.randomplay = function (req, res, next) {
                 score: req.session.aciertos
              });
         } else {
-            var index = req.session.restantes.indexof(quizzes.id);
+            var index = req.session.restantes.indexOf(quizzes.id);
             req.session.restantes.splice(index,1); //Quitamos la mostrada
             res.render('quizzes/random_play.ejs', {
             quiz: quizzes,
