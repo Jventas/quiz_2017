@@ -194,8 +194,9 @@ exports.randomplay = function (req, res, next) {
     .then(function (count) {
 
         //Opción para no incluir preguntas usadas
-        if(!req.session.restantes){
+        if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
+            req.session.aciertos = 0;
             for(var i=0;i<count;i++){
                 req.session.restantes.push(i+1); //Guardamos todos los ID - [1-count]
             }
@@ -233,8 +234,6 @@ exports.randomplay = function (req, res, next) {
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
-            req.session.aciertos = undefined;
-            req.session.restantes = undefined;
         } else {
             req.session.restantes.splice(quizzes[0]-1,1); //Quitamos la mostrada
             res.render('quizzes/random_play.ejs', {
@@ -266,8 +265,6 @@ exports.randomcheck = function (req, res, next) {
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
-            req.session.aciertos = undefined;
-            req.session.restantes = undefined;
         } else {
             res.render('quizzes/random_result', {
                 score: req.session.aciertos,
@@ -276,8 +273,8 @@ exports.randomcheck = function (req, res, next) {
              });
 
             if(!result){
-                req.session.aciertos = undefined;
-                req.session.restantes = undefined;
+                req.session.aciertos = 0;
+                req.session.restantes = [];
             }
         }
     });
