@@ -192,18 +192,23 @@ exports.check = function (req, res, next) {
 exports.randomplay = function (req, res, next) {
     models.Quiz.count()
     .then(function (count) {
-
+        var index;
         //Opción para no incluir preguntas usadas
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
+            index = 0;
             for(var i=0;i<count;i++){
                 req.session.restantes.push(i+1); //Guardamos todos los ID - [1-count]
             }
         }
 
+        if(index>3){
+            index = 0;
+        }else{
+            index++;
+        }
         
-        var randomIndex = Math.floor(Math.random()*(req.session.restantes.length-1));
         idRandom = req.session.restantes[randomIndex];
 
 
