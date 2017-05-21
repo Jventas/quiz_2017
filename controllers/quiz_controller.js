@@ -280,10 +280,6 @@ exports.randomcheck = function (req, res, next) {
             req.session.aciertos = undefined;
             req.session.restantes = undefined;
         } else {
-            if(req.session.restantes.length > 0){
-                req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
-            }
-
             res.render('quizzes/random_result', {
                 score: req.session.aciertos,
                 result: result,
