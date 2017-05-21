@@ -192,32 +192,29 @@ exports.check = function (req, res, next) {
 exports.randomplay = function (req, res, next) {
     models.Quiz.count()
     .then(function (count) {
-        var index;
+
         //Opción para no incluir preguntas usadas
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
-            index = 0;
             for(var i=0;i<count;i++){
                 req.session.restantes.push(i+1); //Guardamos todos los ID - [1-count]
             }
         }
 
-        if(index>3){
-            index = 0;
-        }else{
-            index++;
-        }
         
-        idRandom = req.session.restantes[index];
+        var randomIndex = Math.floor(Math.random()*(req.session.restantes.length-1));
+        idRandom = req.session.restantes[randomIndex];
 
 
         //var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
-        var whereOptions = {'id' : idRandom};
+        // var whereOptions = {'id' : [idRandom]};
         
-        var extraido = models.Quiz.findAll({
-            where: whereOptions,
-        });
+        // var extraido = models.Quiz.findAll({
+        //     where: whereOptions,
+        // });
+
+        var extraido = findById(idRandom);
 
         if(!extraido){
             extraido = [];
@@ -238,9 +235,9 @@ exports.randomplay = function (req, res, next) {
                 score: req.session.aciertos
              });
         } else {
-            req.session.restantes.splice(quizzes[0]-1,1); //Quitamos la mostrada
+            req.session.restantes.splice(quizzes-1,1); //Quitamos la mostrada
             res.render('quizzes/random_play.ejs', {
-            quiz: quizzes[0],
+            quiz: quizzes,
             score: aciertos
         });
         }
