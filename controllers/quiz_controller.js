@@ -197,27 +197,21 @@ exports.randomplay = function (req, res, next) {
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
-            intAleatorio = 0;
             for(var i=0;i<count;i++){
                 req.session.restantes.push(i+1); //Guardamos todos los ID - [1-count]
             }
         }
 
         
-        if(intAleatorio>4){
-            intAleatorio = 0;
-        } else{
-            intAleatorio++;
-        }
+        var randomIndex = Math.floor(Math.random()*(req.session.restantes.length-1));
+        idRandom = req.session.restantes[randomIndex];
 
 
-        var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
-        var whereOptions = {'id' : arrayRestantes};
+        //var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
+        var whereOptions = {'id' : idRandom};
         
         var extraido = models.Quiz.findAll({
             where: whereOptions,
-            limit: 1,
-            offset: intAleatorio-1
         });
 
         if(!extraido){
