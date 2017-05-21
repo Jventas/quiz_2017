@@ -197,10 +197,13 @@ exports.randomplay = function (req, res, next) {
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
-            var todos = models.Quiz.findAll();
-            for(var i=0;i<count;i++){
-                req.session.restantes.push(todos[i].id); //Guardamos todos los ID - [1-count]
-            }
+            var todos = models.Quiz.findAll()
+            .then(function(quizzes){
+                for(var i=0;i<count;i++){
+                    req.session.restantes.push(quizzes[i].id); //Guardamos todos los ID - [1-count]
+                }
+            })
+    
         }
 
         var randomIndex = parseInt(Math.round(Math.random() * (req.session.restantes.length-1)));
