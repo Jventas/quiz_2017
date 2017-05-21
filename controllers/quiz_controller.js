@@ -244,10 +244,9 @@ exports.randomplay = function (req, res, next) {
              });
             req.session.aciertos = undefined;
             req.session.restantes = undefined;
-            req.session.preguntasQuedan = undefined;
         } else {
             if(req.session.restantes.length > 0){
-                req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
+                req.session.restantes.splice(quizzes[0]-1,1); //Quitamos la mostrada
             }
             res.render('quizzes/random_play.ejs', {
             quiz: quizzes[0],
@@ -280,7 +279,6 @@ exports.randomcheck = function (req, res, next) {
              });
             req.session.aciertos = undefined;
             req.session.restantes = undefined;
-            req.session.preguntasQuedan = undefined;
         } else {
             if(req.session.restantes.length > 0){
                 req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
@@ -295,7 +293,6 @@ exports.randomcheck = function (req, res, next) {
             if(!result){
                 req.session.aciertos = undefined;
                 req.session.restantes = undefined;
-                req.session.preguntasQuedan = undefined; 
             }
         }
     });
