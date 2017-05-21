@@ -193,17 +193,6 @@ exports.randomplay = function (req, res, next) {
     models.Quiz.count()
     .then(function (count) {
 
-
-        var intAleatorio = -1;
-
-        if(!req.session.restantes){
-            intAleatorio = Math.floor(Math.random()*(count-1))+1;
-        } else if(req.session.restantes.length > 0) {
-            var indexAleatorio = Math.floor(Math.random()*(req.session.restantes.length-1)); //indice entre 0 y length-1
-            var intAleatorio = req.session.restantes[indexAleatorio];
-        }
-
-
         //Opción para no incluir preguntas usadas
         if(!req.session.restantes){
             req.session.restantes = [];
@@ -211,6 +200,12 @@ exports.randomplay = function (req, res, next) {
                 req.session.restantes.push(i+1); //Guardamos todos los ID - [1-count]
             }
         }
+
+        
+        var indexAleatorio = Math.floor(Math.random()*(req.session.restantes.length-1)); //indice entre 0 y length-1
+        var intAleatorio = req.session.restantes[indexAleatorio];
+
+
         var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
         var whereOptions = {'id' : arrayRestantes};
         
@@ -224,7 +219,6 @@ exports.randomplay = function (req, res, next) {
             extraido = [];
         }
         
-        req.session.extraido = extraido[0];
         return extraido; //Pasamos lo encontrado
     })
     .then(function (quizzes) { //recibe el quiz de la base de datos
@@ -242,6 +236,7 @@ exports.randomplay = function (req, res, next) {
             req.session.aciertos = undefined;
             req.session.restantes = undefined;
         } else {
+            req.session.restantes.splice(quizzes[0]-1,1); //Quitamos la mostrada
             res.render('quizzes/random_play.ejs', {
             quiz: quizzes[0],
             score: aciertos
@@ -274,7 +269,6 @@ exports.randomcheck = function (req, res, next) {
             req.session.aciertos = undefined;
             req.session.restantes = undefined;
         } else {
-            req.session.restantes.splice(req.session.extraido-1,1); //Quitamos la mostrada
             res.render('quizzes/random_result', {
                 score: req.session.aciertos,
                 result: result,
