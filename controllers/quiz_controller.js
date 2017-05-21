@@ -217,7 +217,7 @@ exports.randomplay = function (req, res, next) {
         var extraido = models.Quiz.findAll({
             where: whereOptions,
             limit: 1,
-            offset: intAleatorio
+            offset: intAleatorio-1
         });
 
         if(!extraido){
