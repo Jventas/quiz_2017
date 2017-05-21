@@ -199,7 +199,7 @@ exports.randomplay = function (req, res, next) {
             req.session.aciertos = 0;
             var todos = models.Quiz.findAll();
             for(var i=0;i<count;i++){
-                req.session.restantes.push(todos[i].id; //Guardamos todos los ID - [1-count]
+                req.session.restantes.push(todos[i].id); //Guardamos todos los ID - [1-count]
             }
         }
 
