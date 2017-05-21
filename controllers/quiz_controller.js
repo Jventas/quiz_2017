@@ -202,7 +202,7 @@ exports.randomplay = function (req, res, next) {
             }
         }
 
-       var randomIndex = Math.floor(Math.random() * (req.session.restantes.length));
+       var randomIndex = Math.round(Math.random() * (req.session.restantes.length-1));
         
         idRandom = req.session.restantes[randomIndex];
 
