@@ -204,7 +204,7 @@ exports.randomplay = function (req, res, next) {
 
        var randomIndex = Math.floor(Math.random() * (req.session.restantes.length));
         
-        idRandom = req.session.restantes.length;
+        idRandom = req.session.restantes[randomIndex];
 
 
         //var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
