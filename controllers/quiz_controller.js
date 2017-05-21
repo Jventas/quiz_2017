@@ -267,16 +267,18 @@ exports.randomcheck = function (req, res, next) {
                 score: req.session.aciertos
              });
         } else {
-            res.render('quizzes/random_result', {
-                score: req.session.aciertos,
-                result: result,
-                answer: answer
-             });
-
+            var puntos = req.session.aciertos;
             if(!result){
                 req.session.aciertos = 0;
                 req.session.restantes = [];
             }
+            res.render('quizzes/random_result', {
+                score: puntos,
+                result: result,
+                answer: answer
+             });
+
+            
         }
     });
 
