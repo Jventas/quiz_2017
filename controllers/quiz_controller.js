@@ -197,8 +197,9 @@ exports.randomplay = function (req, res, next) {
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
-            for(var i=1;i<=count;i++){
-                req.session.restantes.push(i); //Guardamos todos los ID - [1-count]
+            var quizzes = models.Quiz.findAll();
+            for(var i=0;i<count;i++){
+                req.session.restantes.push(quizzes[i].id); //Guardamos todos los ID - [1-count]
             }
         }
 
@@ -213,7 +214,7 @@ exports.randomplay = function (req, res, next) {
         //     where: whereOptions,
         // });
 
-        var extraido = models.Quiz.findById(0);
+        var extraido = models.Quiz.findById(idRandom);
 
         if(!extraido){
             extraido = [];
