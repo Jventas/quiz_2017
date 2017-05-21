@@ -209,7 +209,7 @@ exports.randomplay = function (req, res, next) {
             index++;
         }
         
-        idRandom = req.session.restantes[randomIndex];
+        idRandom = req.session.restantes[index];
 
 
         //var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
