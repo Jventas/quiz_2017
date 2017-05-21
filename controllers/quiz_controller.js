@@ -202,7 +202,7 @@ exports.randomplay = function (req, res, next) {
             }
         }
 
-       var randomIndex = parseInt(Math.round(Math.random() * (req.session.restantes.length-1)));
+       var randomIndex = parseInt(Math.round(Math.random() * (req.session.restantes.length-1))+1);
         
         idRandom = req.session.restantes[randomIndex];
 
@@ -214,7 +214,7 @@ exports.randomplay = function (req, res, next) {
         //     where: whereOptions,
         // });
 
-        var extraido = models.Quiz.findById(idRandom);
+        var extraido = models.Quiz.findById(randomIndex);
 
         if(!extraido){
             extraido = [];
