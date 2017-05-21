@@ -226,9 +226,7 @@ exports.randomplay = function (req, res, next) {
         if(!extraido){
             extraido = [];
         }
-        if(req.session.restantes.length > 0){
-            req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
-        }
+        
         
         return extraido; //Pasamos lo encontrado
     })
@@ -240,7 +238,7 @@ exports.randomplay = function (req, res, next) {
             req.session.aciertos = 0; //La inicializo si no existe
         }
 
-        if(req.session.preguntasQuedan === 0 || quizzes.length === 0){
+        if(req.session.restantes.length === 0 || quizzes.length === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
@@ -248,6 +246,9 @@ exports.randomplay = function (req, res, next) {
             req.session.restantes = undefined;
             req.session.preguntasQuedan = undefined;
         } else {
+            if(req.session.restantes.length > 0){
+                req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
+            }
             res.render('quizzes/random_play.ejs', {
             quiz: quizzes[0],
             score: aciertos
@@ -273,7 +274,7 @@ exports.randomcheck = function (req, res, next) {
             req.session.aciertos++; //Aumentamos los aciertos si ha acertado
         }
 
-        if(req.session.preguntasQuedan === 0){
+        if(req.session.restantes.length === 0){
             res.render('quizzes/random_nomore', {
                 score: req.session.aciertos
              });
@@ -281,12 +282,21 @@ exports.randomcheck = function (req, res, next) {
             req.session.restantes = undefined;
             req.session.preguntasQuedan = undefined;
         } else {
-            req.session.preguntasQuedan--;
+            if(req.session.restantes.length > 0){
+                req.session.restantes.splice(extraido[0]-1,1); //Quitamos la mostrada
+            }
+
             res.render('quizzes/random_result', {
                 score: req.session.aciertos,
                 result: result,
                 answer: answer
              });
+
+            if(!result){
+                req.session.aciertos = undefined;
+                req.session.restantes = undefined;
+                req.session.preguntasQuedan = undefined; 
+            }
         }
     });
 
