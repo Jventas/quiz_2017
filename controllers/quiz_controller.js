@@ -194,7 +194,15 @@ exports.randomplay = function (req, res, next) {
     .then(function (count) {
 
 
-        var intAleatorio = Math.floor(Math.random()*(count-1))+1;
+        
+
+        if(!req.session.restantes){
+            var intAleatorio = Math.floor(Math.random()*(count-1))+1;
+        } else {
+            var indexAleatorio = Math.floor(Math.random()*(req.session.restantes.length-1)); //indice entre 0 y length-1
+            var intAleatorio = req.session.restantes[indexAleatorio];
+        }
+
         if(!req.session.preguntasQuedan){
             req.session.preguntasQuedan = count;
         }
