@@ -203,11 +203,7 @@ exports.randomplay = function (req, res, next) {
             }
         }
 
-        if(randomIndex >3){
-            randomIndex = 0;
-        } else{
-            randomIndex++;
-        }
+        randomIndex = Math.round(Math.random() * (req.session.restantes.length-1));
         
         idRandom = req.session.restantes.length;
 
