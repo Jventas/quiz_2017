@@ -214,7 +214,7 @@ exports.randomplay = function (req, res, next) {
         //     where: whereOptions,
         // });
 
-        var extraido = findById(idRandom);
+        var extraido = models.Quiz.findById(idRandom);
 
         if(!extraido){
             extraido = [];
