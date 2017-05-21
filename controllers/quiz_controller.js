@@ -203,8 +203,11 @@ exports.randomplay = function (req, res, next) {
         }
 
         
-        var indexAleatorio = Math.floor(Math.random()*(req.session.restantes.length-1)); //indice entre 0 y length-1
-        var intAleatorio = req.session.restantes[indexAleatorio];
+        if(!intAleatorio || intAleatorio>4){
+            intAleatorio = 0;
+        } else{
+            intAleatorio++;
+        }
 
 
         var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
