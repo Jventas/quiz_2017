@@ -190,19 +190,16 @@ exports.check = function (req, res, next) {
 
 // GET /quizzes/randomplay
 exports.randomplay = function (req, res, next) {
-    models.Quiz.count()
-    .then(function (count) {
+    models.Quiz.findAll()
+    .then(function (quizzes) {
 
         //Opción para no incluir preguntas usadas
         if(!req.session.restantes || req.session.restantes.length === 0){
             req.session.restantes = [];
             req.session.aciertos = 0;
-            var todos = models.Quiz.findAll()
-            .then(function(quizzes){
-                for(var i=0;i<count;i++){
-                    req.session.restantes.push(quizzes[i].id); //Guardamos todos los ID - [1-count]
-                }
-            })
+            for(var i=0;i<count;i++){
+                req.session.restantes.push(quizzes[i].id); //Guardamos todos los ID - [1-count]
+            }
     
         }
 
