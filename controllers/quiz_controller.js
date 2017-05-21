@@ -224,7 +224,7 @@ exports.randomplay = function (req, res, next) {
             extraido = [];
         }
         
-        
+        req.session.extraido = extraido[0];
         return extraido; //Pasamos lo encontrado
     })
     .then(function (quizzes) { //recibe el quiz de la base de datos
@@ -274,7 +274,7 @@ exports.randomcheck = function (req, res, next) {
             req.session.aciertos = undefined;
             req.session.restantes = undefined;
         } else {
-            req.session.restantes.splice(quizzes[0]-1,1); //Quitamos la mostrada
+            req.session.restantes.splice(req.session.extraido-1,1); //Quitamos la mostrada
             res.render('quizzes/random_result', {
                 score: req.session.aciertos,
                 result: result,
