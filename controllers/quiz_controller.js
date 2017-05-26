@@ -267,17 +267,15 @@ exports.randomcheck = function (req, res, next) {
                 score: req.session.aciertos
              });
         } else {
-            var puntos = req.session.aciertos;
             if(!result){
                 req.session.aciertos = 0;
                 req.session.restantes = [];
             }
             res.render('quizzes/random_result', {
-                score: puntos,
+                score: req.session.aciertos,
                 result: result,
                 answer: answer
              });
-
             
         }
     });
