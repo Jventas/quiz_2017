@@ -187,3 +187,99 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+// GET /quizzes/randomplay
+exports.randomplay = function (req, res, next) {
+    models.Quiz.findAll()
+    .then(function (quizzes) {
+
+        //Opción para no incluir preguntas usadas
+        if(!req.session.restantes || req.session.restantes.length === 0){
+            req.session.restantes = [];
+            req.session.aciertos = 0;
+            for(var i=0;i<quizzes.length;i++){
+                req.session.restantes.push(quizzes[i].id); //Guardamos todos los ID - [1-count]
+            }
+    
+        }
+
+        var randomIndex = parseInt(Math.round(Math.random() * (req.session.restantes.length-1)));
+        idRandom = req.session.restantes[randomIndex];
+
+
+        //var arrayRestantes = req.session.restantes.length === 0 ? [-1] : req.session.restantes;
+        // var whereOptions = {'id' : [idRandom]};
+        
+        // var extraido = models.Quiz.findAll({
+        //     where: whereOptions,
+        // });
+
+        var extraido = models.Quiz.findById(idRandom);
+
+        if(!extraido){
+            extraido = [];
+        }
+        
+        return extraido; //Pasamos lo encontrado
+    })
+    .then(function (quizzes) { //recibe el quiz de la base de datos
+        var aciertos = 0;
+        if(req.session.aciertos){
+            aciertos = req.session.aciertos;
+        } else {
+            req.session.aciertos = 0; //La inicializo si no existe
+        }
+
+        if(req.session.restantes.length === 0 || quizzes.length === 0){
+            res.render('quizzes/random_nomore', {
+                score: req.session.aciertos
+             });
+        } else {
+            var index = req.session.restantes.indexOf(quizzes.id);
+            req.session.restantes.splice(index,1); //Quitamos la mostrada
+            res.render('quizzes/random_play.ejs', {
+            quiz: quizzes,
+            score: aciertos
+        });
+        }
+        
+    })
+    .catch(function (error) {
+        next(error);
+    });
+};
+
+// GET /quizzes/randomcheck/:quizId
+exports.randomcheck = function (req, res, next) {
+
+    models.Quiz.count()
+    .then(function (count) {
+
+        var answer = req.query.answer || "";
+
+        var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+        if(result){
+            req.session.aciertos++; //Aumentamos los aciertos si ha acertado
+        }
+
+        if(req.session.restantes.length === 0){
+            res.render('quizzes/random_nomore', {
+                score: req.session.aciertos
+             });
+        } else {
+            if(!result){
+                req.session.aciertos = 0;
+                req.session.restantes = [];
+            }
+            res.render('quizzes/random_result', {
+                score: req.session.aciertos,
+                result: result,
+                answer: answer
+             });
+            
+        }
+    });
+
+    
+};
+    
